@@ -2,10 +2,6 @@
 
 set -e
 
-sudo apt -qq install \
-    libblas-dev \
-    gfortran
-
 python -m pip install -U pip
 pip install cibuildwheel
-python -m cibuildwheel --output-dir wheelhouse
+CIBW_BUILD="cp3{7,8,9,1?}-*" python -m cibuildwheel --output-dir wheelhouse
