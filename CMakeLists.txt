@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.17.2...3.26)
+cmake_minimum_required(VERSION 3.16)
 
 project(toy
   LANGUAGES C Fortran
@@ -33,6 +33,7 @@ foreach(fortran_src_file ${sources})
                        "${fortran_src_file}"
                        -c "${f2py_signature_file}"
                        --backend meson
+                       --dep blas
                        ${BLAS_LIBRARIES}
       WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/${f2py_module_name}"
       COMMAND_EXPAND_LISTS

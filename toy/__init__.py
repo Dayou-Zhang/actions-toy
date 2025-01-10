@@ -1,5 +1,6 @@
 import numpy as np
-from .dot_product.dot_product import calc_dot
+import toy.dot_product.calc_dot as d
+#  import toy.dot_product.ddot as d
 
 
 def dot(vec1, vec2):
@@ -8,4 +9,4 @@ def dot(vec1, vec2):
     n = len(v1)
     if n != len(v2):
         raise ValueError("Vectors must be of the same length")
-    return calc_dot(v1, v2)
+    return d.calc_dot(v1, v2)

@@ -1,16 +1,16 @@
 !    -*- f90 -*-
 ! Note: the context of this file is case sensitive.
 
-python module dot_product ! in 
-    interface  ! in :dot_product
-        function calc_dot(n,vec1,vec2) result (res) ! in :dot_product:dot_product.f90
+python module calc_dot ! in
+    interface  ! in :calc_dot
+        function calc_dot(n,vec1,vec2) result (res) ! in :calc_dot:calc_dot.f90
             integer, intent(hide),depend(vec1) :: n=shape(vec1, 0)
             double precision dimension(n),intent(in) :: vec1
             double precision dimension(n),intent(in),depend(n),check(shape(vec2, 0) == n) :: vec2
             double precision :: res
         end function calc_dot
     end interface 
-end python module dot_product
+end python module calc_dot
 
 ! This file was auto-generated with f2py (version:2.1.0).
 ! See:
