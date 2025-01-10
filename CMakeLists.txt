@@ -32,8 +32,8 @@ foreach(fortran_src_file ${sources})
       COMMAND ${PYTHON_EXECUTABLE}  -m "numpy.f2py"
                        "${fortran_src_file}"
                        -c "${f2py_signature_file}"
-                       --backend meson
-                       --dep blas
+                       --backend=meson
+                       --dep=blas
                        ${BLAS_LIBRARIES}
       WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/${f2py_module_name}"
       COMMAND_EXPAND_LISTS
