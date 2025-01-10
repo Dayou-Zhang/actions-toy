@@ -19,3 +19,9 @@ sdist.exclude = [
     "**/*.f90",
     "**/*.F",
 ]
+
+[tool.cibuildwheel]
+test-requires = "pytest"
+test-command = "pytest"
+before-all = "apt install -y libblas-dev gfortran"
+select = "cp3{7,8,9,1?}-*"
