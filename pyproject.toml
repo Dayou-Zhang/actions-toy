@@ -21,5 +21,5 @@ sdist.exclude = [
 
 [tool.cibuildwheel]
 test-requires = "pytest"
-test-command = "pytest"
+test-command = "pytest {project}/tests"
 before-all = "yum -y install blas-devel"
