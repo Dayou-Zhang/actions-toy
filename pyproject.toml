@@ -7,7 +7,6 @@ dependencies = ["numpy"]
 [build-system]
 requires = [
     "scikit-build-core",
-    "meson",
     "numpy>=2.0.2",
 ]
 build-backend = "scikit_build_core.build"

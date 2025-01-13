@@ -17,3 +17,7 @@ def test_dot_length_mismatch():
         toy.dot(vec1, vec2)
     except ValueError as e:
         assert str(e) == "Vectors must be of the same length"
+
+if __name__ == '__main__':
+    test_dot()
+    test_dot_length_mismatch()
