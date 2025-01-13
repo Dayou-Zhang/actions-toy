@@ -22,26 +22,35 @@ file(GLOB_RECURSE sources "*_*.f" "*_*.f90")
 # Compile each f2py module
 foreach(fortran_src_file ${sources})
     get_filename_component(f2py_module_name ${fortran_src_file} NAME_WE)
+    get_filename_component(f2py_module_src ${fortran_src_file} NAME)
     get_filename_component(f2py_dir_name ${fortran_src_file} DIRECTORY)
-    get_filename_component(system_name ${f2py_dir_name} NAME)
-    message("processing ${f2py_module_name} at ${f2py_dir_name}")
-    set(f2py_module_c "${f2py_dir_name}/${f2py_module_name}module.c")
-    set(f2py_module_f "${f2py_dir_name}/${f2py_module_name}-f2pywrappers.f")
+    set(f2py_module_c "${f2py_module_name}module.c")
+    set(f2py_module_f "${f2py_module_name}-f2pywrappers.f")
     string(REGEX REPLACE "[.]f(90)?$" ".pyf" f2py_signature_file ${fortran_src_file})
+    get_filename_component(f2py_module_sig ${f2py_signature_file} NAME)
+    set(module_build_dir "${CMAKE_BINARY_DIR}/${f2py_module_name}")
 
     add_custom_command(
-      OUTPUT "${f2py_module_c}" "${f2py_module_f}"
+      OUTPUT "${module_build_dir}/${f2py_module_sig}" "${module_build_dir}/${f2py_module_src}"
+      COMMAND mkdir -p "${module_build_dir}"
+      COMMAND cp "${f2py_signature_file}" "${module_build_dir}"
+      COMMAND cp "${fortran_src_file}" "${module_build_dir}"
+      DEPENDS "${f2py_signature_file}" "${fortran_src_file}"
+    )
+
+    message("processing ${module_build_dir}")
+    add_custom_command(
+      OUTPUT "${module_build_dir}/${f2py_module_c}" "${module_build_dir}/${f2py_module_f}"
       COMMAND ${Python_EXECUTABLE}  -m "numpy.f2py"
-                       "${f2py_signature_file}"
+                       "${module_build_dir}/${f2py_module_sig}"
                        --lower
-      COMMAND_EXPAND_LISTS
-      DEPENDS "${fortran_src_file}"
-      WORKING_DIRECTORY "${f2py_dir_name}"
+      DEPENDS "${module_build_dir}/${f2py_module_sig}" "${module_build_dir}/${f2py_module_src}"
+      WORKING_DIRECTORY "${module_build_dir}"
     )
 
     python_add_library(${f2py_module_name} MODULE
-        ${f2py_module_c}
-        ${f2py_module_f}
+        "${module_build_dir}/${f2py_module_c}"
+        "${module_build_dir}/${f2py_module_f}"
         "${F2PY_INCLUDE_DIR}/fortranobject.c"
         "${fortran_src_file}" WITH_SOABI
     )

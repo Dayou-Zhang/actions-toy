@@ -1,7 +1,3 @@
-# f2py build temp files
-*-f2pywrappers.f
-*module.c
-
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
