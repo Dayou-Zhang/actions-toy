@@ -25,6 +25,7 @@ jobs:
           CIBW_BUILD: "cp3${{ matrix.python_version }}-manylinux*"
       - uses: actions/upload-artifact@v4
         with:
+          name: cp3${{ matrix.python_version }}-wheel
           path: ./wheelhouse/*.whl
   release:
     runs-on: ubuntu-latest
