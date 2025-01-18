@@ -46,6 +46,7 @@ jobs:
     needs: linux-build
     permissions:
       id-token: write
+    environment: TestPyPI
     steps:
       - uses: actions/download-artifact@v4
         with:
@@ -60,3 +61,4 @@ jobs:
           repository-url: https://test.pypi.org/legacy/
           packages-dir: wheels
           verbose: true
+          password: ${{ secrets.PYPI_API_TOKEN }}
