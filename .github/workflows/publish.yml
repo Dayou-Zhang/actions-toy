@@ -8,6 +8,8 @@ permissions:
 jobs:
   linux-build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -16,3 +18,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           path: ./wheelhouse/*.whl
+      - name: Upload Wheels
+        run: ./.github/workflows/upload_wheels.sh
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
