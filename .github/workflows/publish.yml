@@ -41,3 +41,19 @@ jobs:
         run: ./.github/workflows/upload_wheels.sh
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  pip-upload:
+    runs-on: ubuntu-latest
+    needs: linux-build
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: wheelhouse/
+      - name: Gather Wheels
+        run: |
+          mkdir wheels
+          mv wheelhouse/*/* wheels
+      - name: Publish to TestPyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          repository-url: https://test.pypi.org/legacy/
+          packages-dir: wheels
