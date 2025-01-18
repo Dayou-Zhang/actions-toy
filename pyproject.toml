@@ -3,6 +3,10 @@ name = "actiontoy"
 description = "A toy package with vector operations"
 dependencies = ["numpy"]
 dynamic = ["version"]
+readme = "README.md"
+
+[project.urls]
+Homepage = "https://github.com/Dayou-Zhang/actions-toy"
 
 [build-system]
 requires = [
