@@ -1,6 +1,6 @@
 import numpy as np
-import toy.dot_product.calc_dot as d
-#  import toy.dot_product.ddot as d
+import actiontoy.dot_product.calc_dot as d
+#  import actiontoy.dot_product.ddot as d
 
 
 def dot(vec1, vec2):

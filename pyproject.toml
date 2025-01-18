@@ -1,5 +1,5 @@
 [project]
-name = "actions-toy"
+name = "actiontoy"
 description = "A toy package with vector operations"
 dependencies = ["numpy"]
 dynamic = ["version"]
@@ -13,7 +13,7 @@ build-backend = "scikit_build_core.build"
 
 [tool.scikit-build.metadata.version]
 provider = "scikit_build_core.metadata.regex"
-input = "toy/_version.py"
+input = "actiontoy/_version.py"
 regex = '''__version__ = "(?P<version>[^"]+)"'''
 result = "{version}"
 
