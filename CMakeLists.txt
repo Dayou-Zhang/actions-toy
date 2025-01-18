@@ -22,26 +22,46 @@ file(GLOB_RECURSE sources "*_*.f" "*_*.f90")
 # Compile each f2py module
 foreach(fortran_src_file ${sources})
     get_filename_component(f2py_module_name ${fortran_src_file} NAME_WE)
+    get_filename_component(f2py_module_src ${fortran_src_file} NAME)
     get_filename_component(f2py_dir_name ${fortran_src_file} DIRECTORY)
-    get_filename_component(system_name ${f2py_dir_name} NAME)
+    set(f2py_module_c "${f2py_module_name}module.c")
+    set(f2py_module_f "${f2py_module_name}-f2pywrappers.f")
     string(REGEX REPLACE "[.]f(90)?$" ".pyf" f2py_signature_file ${fortran_src_file})
-    set(f2py_module_so "${CMAKE_CURRENT_BINARY_DIR}/${f2py_module_name}/${f2py_module_name}.${Python_SOABI}.so")
+    get_filename_component(f2py_module_sig ${f2py_signature_file} NAME)
+    set(module_build_dir "${CMAKE_BINARY_DIR}/${f2py_module_name}")
 
     add_custom_command(
-      OUTPUT "${f2py_module_so}"
-      COMMAND ${PYTHON_EXECUTABLE}  -m "numpy.f2py"
-                       "${fortran_src_file}"
-                       -c "${f2py_signature_file}"
-                       --backend=meson
-                       --dep=blas
-                       ${BLAS_LIBRARIES}
-      WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/${f2py_module_name}"
-      COMMAND_EXPAND_LISTS
-      DEPENDS "${fortran_src_file}"
+      OUTPUT "${module_build_dir}/${f2py_module_sig}" "${module_build_dir}/${f2py_module_src}"
+      COMMAND mkdir -p "${module_build_dir}"
+      COMMAND cp "${f2py_signature_file}" "${module_build_dir}"
+      COMMAND cp "${fortran_src_file}" "${module_build_dir}"
+      DEPENDS "${f2py_signature_file}" "${fortran_src_file}"
     )
 
-    add_custom_target(${f2py_module_name} ALL DEPENDS ${f2py_module_so})
+    message("processing ${module_build_dir}")
+    add_custom_command(
+      OUTPUT "${module_build_dir}/${f2py_module_c}" "${module_build_dir}/${f2py_module_f}"
+      COMMAND ${Python_EXECUTABLE}  -m "numpy.f2py"
+                       "${module_build_dir}/${f2py_module_sig}"
+                       --lower
+      DEPENDS "${module_build_dir}/${f2py_module_sig}" "${module_build_dir}/${f2py_module_src}"
+      WORKING_DIRECTORY "${module_build_dir}"
+    )
 
-    install(PROGRAMS ${f2py_module_so} DESTINATION "${CMAKE_PROJECT_NAME}/${system_name}")
+    python_add_library(${f2py_module_name} MODULE
+        "${module_build_dir}/${f2py_module_c}"
+        "${module_build_dir}/${f2py_module_f}"
+        "${F2PY_INCLUDE_DIR}/fortranobject.c"
+        "${fortran_src_file}" WITH_SOABI
+    )
+
+    target_include_directories(${f2py_module_name} PUBLIC
+        ${F2PY_INCLUDE_DIR}
+    )
+
+    target_link_libraries(${f2py_module_name} PUBLIC Python::NumPy ${BLAS_LIBRARIES})
+
+    file(RELATIVE_PATH install_dir ${CMAKE_SOURCE_DIR} ${f2py_dir_name})
+    install(TARGETS ${f2py_module_name} DESTINATION "${install_dir}")
 
 endforeach()

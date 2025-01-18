@@ -1,16 +1,28 @@
 [project]
-name = "toy"
-version = "0.1.0"
+name = "actiontoy"
 description = "A toy package with vector operations"
 dependencies = ["numpy"]
+dynamic = ["version"]
+readme = "README.md"
+authors = [
+  { name="Example Author" },
+]
+
+[project.urls]
+Homepage = "https://github.com/Dayou-Zhang/actions-toy"
 
 [build-system]
 requires = [
     "scikit-build-core",
-    "meson",
     "numpy>=2.0.2",
 ]
 build-backend = "scikit_build_core.build"
+
+[tool.scikit-build.metadata.version]
+provider = "scikit_build_core.metadata.regex"
+input = "actiontoy/_version.py"
+regex = '''__version__ = "(?P<version>[^"]+)"'''
+result = "{version}"
 
 [tool.scikit-build]
 sdist.exclude = [
@@ -22,5 +34,5 @@ sdist.exclude = [
 
 [tool.cibuildwheel]
 test-requires = "pytest"
-test-command = "pytest"
-before-all = "yum -y install blas-devel"
+test-command = "pytest {project}/tests"
+before-all = "yum -y install openblas-devel"
