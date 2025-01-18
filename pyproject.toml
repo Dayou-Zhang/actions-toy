@@ -1,5 +1,5 @@
 [project]
-name = "toy"
+name = "actions-toy"
 description = "A toy package with vector operations"
 dependencies = ["numpy"]
 dynamic = ["version"]
