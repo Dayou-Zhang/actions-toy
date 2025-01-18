@@ -4,6 +4,9 @@ description = "A toy package with vector operations"
 dependencies = ["numpy"]
 dynamic = ["version"]
 readme = "README.md"
+authors = [
+  { name="Example Author" },
+]
 
 [project.urls]
 Homepage = "https://github.com/Dayou-Zhang/actions-toy"
