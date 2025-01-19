@@ -25,11 +25,16 @@ regex = '''__version__ = "(?P<version>[^"]+)"'''
 result = "{version}"
 
 [tool.scikit-build]
-sdist.exclude = [
+wheel.exclude = [
     ".github",
+    "tests",
     "**/*.pyf",
     "**/*.f90",
     "**/*.F",
+]
+sdist.exclude = [
+    ".github",
+    "tests",
 ]
 
 [tool.cibuildwheel]
